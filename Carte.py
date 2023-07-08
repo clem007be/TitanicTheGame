@@ -8,6 +8,7 @@ from turtle import *
 import numpy as np
 
 SCALE = 20
+a = 9
 
 def pontAvantDroit(t, sinking=False, sunk=False):
     t.speed(0)
@@ -21,7 +22,7 @@ def pontAvantDroit(t, sinking=False, sunk=False):
         t.fillcolor('black')
     else:
         t.fillcolor('#fede86')
-        t.speed(9)
+        t.speed(a)
     t.begin_fill()
     t.fd(6 * SCALE)
     t.rt(90)
@@ -45,7 +46,7 @@ def pontMilieuDroit(t, sinking=False, sunk=False):
         t.fillcolor('black')
     else:
         t.fillcolor('#fede86')
-        t.speed(9)
+        t.speed(a)
     t.begin_fill()
     t.fd(8*SCALE)
     t.rt(90)
@@ -69,7 +70,7 @@ def pontArrDroit(t, sinking=False, sunk=False):
         t.fillcolor('black')
     else:
         t.fillcolor('#fede86')
-        t.speed(9)
+        t.speed(a)
     t.begin_fill()
     t.fd(6*SCALE)
     t.rt(90)
@@ -93,7 +94,7 @@ def pontAvantGauche(t, sinking=False, sunk=False):
         t.fillcolor('black')
     else:
         t.fillcolor('#fede86')
-        t.speed(9)
+        t.speed(a)
     t.begin_fill()
     t.fd(6*SCALE)
     t.rt(90)
@@ -117,7 +118,7 @@ def pontMilieuGauche(t, sinking=False, sunk=False):
         t.fillcolor('black')
     else:
         t.fillcolor('#fede86')
-        t.speed(9)
+        t.speed(a)
     t.begin_fill()
     t.fd(8*SCALE)
     t.rt(90)
@@ -141,7 +142,7 @@ def pontArrGauche(t, sinking=False, sunk=False):
         t.fillcolor('black')
     else:
         t.fillcolor('#fede86')
-        t.speed(9)
+        t.speed(a)
     t.begin_fill()
     t.fd(6*SCALE)
     t.rt(90)
@@ -165,7 +166,7 @@ def moteur(t, sinking=False, sunk=False):
         t.fillcolor('black')
     else:
         t.fillcolor('#fede86')
-        t.speed(9)
+        t.speed(a)
     t.begin_fill()
     t.fd(6*SCALE)
     t.rt(90)
@@ -193,7 +194,7 @@ def cabine(t, sinking=False, sunk=False):
         t.fillcolor('black')
     else:
         t.fillcolor('#fede86')
-        t.speed(9)
+        t.speed(a)
     t.begin_fill()
     t.fd(2*SCALE)
     t.rt(90)
@@ -221,7 +222,7 @@ def buffet(t, sinking=False, sunk=False):
         t.fillcolor('black')
     else:
         t.fillcolor('#fede86')
-        t.speed(9)
+        t.speed(a)
     t.begin_fill()
     t.fd(2*SCALE)
     t.rt(90)
@@ -245,7 +246,7 @@ def tapis(t, sinking=False, sunk=False):
         t.fillcolor('black')
     else:
         t.fillcolor('#fede86')
-        t.speed(9)
+        t.speed(a)
     t.begin_fill()
     t.fd(2*SCALE)
     t.rt(90)
@@ -269,7 +270,7 @@ def tables(t, sinking=False, sunk=False):
         t.fillcolor('black')
     else:
         t.fillcolor('#fede86')
-        t.speed(9)
+        t.speed(a)
     t.begin_fill()
     t.fd(4*SCALE)
     t.rt(90)
@@ -293,7 +294,7 @@ def chambresDroite(t, sinking=False, sunk=False):
         t.fillcolor('black')
     else:
         t.fillcolor('#fede86')
-        t.speed(9)
+        t.speed(a)
     t.begin_fill()
     t.fd(6*SCALE)
     t.rt(90)
@@ -317,7 +318,7 @@ def chambresGauche(t, sinking=False, sunk=False):
         t.fillcolor('black')
     else:
         t.fillcolor('#fede86')
-        t.speed(9)
+        t.speed(a)
     t.begin_fill()
     t.fd(6*SCALE)
     t.rt(90)
@@ -341,7 +342,7 @@ def salleSecrete(t, sinking=False, sunk=False):
         t.fillcolor('black')
     else:
         t.fillcolor('#fede86')
-        t.speed(9)
+        t.speed(a)
     t.begin_fill()
     t.fd(6*SCALE)
     t.rt(90)
@@ -365,7 +366,7 @@ def pontAvant(t, sinking=False, sunk=False):
         t.fillcolor('black')
     else:
         t.fillcolor('#fede86')
-        t.speed(9)
+        t.speed(a)
     t.begin_fill()
     t.circle(8*SCALE, extent=67.97569)
     t.speed(0)
@@ -373,7 +374,7 @@ def pontAvant(t, sinking=False, sunk=False):
     t.goto(-10*SCALE, -4*SCALE)
     t.seth(180)
     t.pendown()
-    t.speed(9)
+    t.speed(a)
     t.circle(-8*SCALE, extent=67.97569)
     t.penup()
     t.goto(-10*SCALE, -4*SCALE)
@@ -395,7 +396,7 @@ def pontArriere(t, sinking=False, sunk=False):
         t.fillcolor('black')
     else:
         t.fillcolor('#fede86')
-        t.speed(9)
+        t.speed(a)
     t.begin_fill()
     t.circle(-5*SCALE, extent=180)
     t.rt(90)
@@ -413,7 +414,7 @@ def bateauDroit(t, left=False):
         t.fillcolor('black')
     else:
         t.fillcolor('#ff7f02')
-        t.speed(9)
+        t.speed(a)
     t.begin_fill()
     t.fd(2*SCALE)
     t.circle(-1*SCALE, extent=180)
@@ -432,7 +433,7 @@ def bateauGauche(t, left=False):
         t.fillcolor('black')
     else:
         t.fillcolor('#ff7f02')
-        t.speed(9)
+        t.speed(a)
     t.begin_fill()
     t.fd(2*SCALE)
     t.circle(-1*SCALE, extent=180)

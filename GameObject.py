@@ -47,19 +47,6 @@ class Map():
                 data.places[place]['func'](self.t, sinking=True)
             if(state == 'sunk'):
                 data.places[place]['func'](self.t, sunk=True)
-
-        def pion(self, player):
-            self.t.speed(0)
-            self.t.color(player.color,player.color)
-            self.t.goto(data.places[player.place[0]]['pos'][player.place[1]])
-            self.t.seth(90)
-            self.t.fd(0.25*C.SCALE)
-            self.t.right(90)
-            self.t.pendown()
-            self.t.begin_fill()
-            self.t.circle(-0.25*C.SCALE)
-            self.t.end_fill()
-            self.t.penup()
             
     def __init__(self,cv):
         self.map = self.MapGUI(cv)
@@ -95,20 +82,41 @@ class Map():
     def add_people(self,player):
         self.people[player.place[0]] += 1
         player.set_which_pawn(self.people[player.place[0]])
-        self.map.pion(player)
+        player.pion()
+
+    def remove_people(self,player):
+        self.people[player.place[0]] -=1
+        player.t.clear()
+        # return self.people[player.place[0]]
+        
 
     def get_people(self,place):
         return self.people[place]
     
 class Player():
     def __init__(self, map, color):
+        self.t = ttl.RawTurtle(map.map.screen)
+        self.t.hideturtle()
+        self.t.color(color,color)
+        self.t.penup()
         self.place = ["",0]
         self.tresors = 0
-        self.move = 3
+        self.moves = 3
         self.map = map
-        self.color = color
         self.set_place("tables")
-        
+    
+    def pion(self):
+        self.t.speed(0)
+        self.t.goto(data.places[self.place[0]]['pos'][self.place[1]])
+        self.t.seth(90)
+        self.t.fd(0.25*C.SCALE)
+        self.t.right(90)
+        self.t.pendown()
+        self.t.begin_fill()
+        self.t.circle(-0.25*C.SCALE)
+        self.t.end_fill()
+        self.t.penup()
+
     def set_place(self,place):
         self.place[0] = place
         self.map.add_people(self)
@@ -119,8 +127,16 @@ class Player():
     def get_position(self):
         return self.place
     
+    def travel(self,place):
+        self.map.remove_people(self)
+        self.set_place(place)
+
     def get_tresors(self):
         return self.tresors
+
+    def leave(self,map):
+        if(self.place == 'bateauGauche' or self.place == 'bateauDroit'):
+            map.set_state(self.place)
 
     def drying(self, place, map):
         if (map.state[place] == 0):
@@ -133,11 +149,8 @@ class Player():
             data.places[self.place]['func'](map.map.t)
         return self.state[place]
 
-    def leave(self,map):
-        if(self.place == 'bateauGauche' or self.place == 'bateauDroit'):
-            map.set_state(self.place)
-
     def turn(self, e):
         self
         return
+    
     
