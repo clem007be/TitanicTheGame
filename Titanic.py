@@ -6,32 +6,33 @@ This is a temporary script file.
 """
 
 import numpy as np
-from turtle import *
-from Carte import *
-from GameObject import *
+import turtle as ttl
+import Carte
+import GameObject as GO
 import matplotlib.pyplot as plt
-import time
 from tkinter import *
 from tkinter import ttk
+
 def main():
     root = Tk()
-    root.title = "Game"
-    root.resizable(0,0)
-    root.wm_attributes("-topmost", 1)
-    canvas = tkt.Canvas(root)
-    carte = Map(canvas)
-    P1 = Player(canvas,'#ff0000')
-    P2 = Player(canvas,'#ff0000')
-    P3 = Player(canvas,'#ff0000')
-    P4 = Player(canvas,'#ff0000')
-    P5 = Player(canvas,'#ff0000')
-    P6 = Player(canvas,'#ff0000')
-    while True:
-        P1.turn()
-        # P2
-        
-        break
-    exitonclick()
+    root.geometry('1000x600+0+0')
+    root.title = "Titanic The Game"
+
+    plateau_frame = Frame(root, height=500, width=1000)
+    plateau_frame.grid(row=0,column=0)
+    canvas = Canvas(plateau_frame, height=500, width=1000)
+    canvas.grid(row=0,column=0)
+    plateau = GO.Map(canvas)
+    player1 = GO.Player(plateau,'red')
+    player2 = GO.Player(plateau,'blue')
+
+
+    button_frame = Frame(root, height=100,width=1000)
+    button_frame.grid(row=1,column=0)
+    
+    quit_btn = ttk.Button(root, text='Quit', command=root.quit)
+    quit_btn.place(relx=1,rely=0,anchor='ne')
+    root.mainloop()
     
 
 if __name__ == "__main__":

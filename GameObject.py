@@ -5,116 +5,139 @@ Created on Sat Apr 15 18:48:42 2023
 @author: cleme
 """
 
-from turtle import *
-from Carte import *
+import turtle as ttl
+import Carte as C
+import data
 import random as rdm
 import matplotlib.pyplot as plt
-import tkinter as tkt
+import tkinter as tk
 
+class Map():
+    class MapGUI():
+        def __init__(self, cv):
+            self.screen = ttl.TurtleScreen(cv)
+            self.screen.bgcolor('lightblue')
+            self.t = ttl.RawTurtle(self.screen)
+            self.t.hideturtle()
+            self.t.penup()
+            self.initMap()
+
+        def initMap(self):
+            C.pontAvantDroit(self.t)
+            C.pontMilieuDroit(self.t)
+            C.pontArrDroit(self.t)
+            C.pontAvantGauche(self.t)
+            C.pontMilieuGauche(self.t)
+            C.pontArrGauche(self.t)
+            C.moteur(self.t)
+            C.cabine(self.t)
+            C.buffet(self.t)
+            C.tapis(self.t)
+            C.tables(self.t)
+            C.chambresDroite(self.t)
+            C.chambresGauche(self.t)
+            C.salleSecrete(self.t)
+            C.pontAvant(self.t)
+            C.pontArriere(self.t)
+            C.bateauDroit(self.t)
+            C.bateauGauche(self.t)  
+            
+        def sinking(self, place,state):
+            if(state == 'sinking'):
+                data.places[place]['func'](self.t, sinking=True)
+            if(state == 'sunk'):
+                data.places[place]['func'](self.t, sunk=True)
+
+        def pion(self, player):
+            self.t.speed(0)
+            self.t.color(player.color,player.color)
+            self.t.goto(data.places[player.place[0]]['pos'][player.place[1]])
+            self.t.seth(90)
+            self.t.fd(0.25*C.SCALE)
+            self.t.right(90)
+            self.t.pendown()
+            self.t.begin_fill()
+            self.t.circle(-0.25*C.SCALE)
+            self.t.end_fill()
+            self.t.penup()
+            
+    def __init__(self,cv):
+        self.map = self.MapGUI(cv)
+        self.state = {"pontAvantDroit":0, "pontMilieuDroit":0, "pontArrDroit":0, "pontAvantGauche":0,
+                      "pontMilieuGauche":0, "pontArrGauche":0, "moteur":0, "cabine":0, "buffet":0, 
+                      "tapis":0, "tables":0,"pontAvant":0, "pontArriere":0, "chambresGauche":0,
+                      "chambresDroite":0, "salleSecrete":0}
+        self.people = {"pontAvantDroit":-1, "pontMilieuDroit":-1, "pontArrDroit":-1, "pontAvantGauche":-1,
+                      "pontMilieuGauche":-1, "pontArrGauche":-1, "moteur":-1, "cabine":-1, "buffet":-1, 
+                      "tapis":-1, "tables":-1,"pontAvant":-1, "pontArriere":-1, "chambresGauche":-1,
+                      "chambresDroite":-1, "salleSecrete":-1}
+        
+    def sinking(self, place):
+        if (self.state[place] == 2):
+            print("Le terrain est déjà innondé.")
+        else:
+            self.state[place] += 1 
+            if (self.state[place] == 1):
+                print("Le terrain est en train de sombrer.")
+                self.map.sinking(place,'sinking')
+            elif(self.state[place] == 2):
+                print("Le terrain est innondé.")
+                self.map.sinking(place,'sunk')
+        return self.state[place]
+
+    def set_state(self,place):
+        if (self.state[place] < 2):
+            self.state[place] += 1
+
+    def get_state(self,place):
+        return self.state[place]
+
+    def add_people(self,player):
+        self.people[player.place[0]] += 1
+        player.set_which_pawn(self.people[player.place[0]])
+        self.map.pion(player)
+
+    def get_people(self,place):
+        return self.people[place]
+    
 class Player():
-    
-    places = {"pontAvantDroit":[1/2,(-7.5*SCALE,5*SCALE),(-6.5*SCALE,5*SCALE),(-8.5*SCALE,5*SCALE),(-5.5*SCALE,5*SCALE),(-9.5*SCALE,5*SCALE),(-4.5*SCALE,5*SCALE)],
-              "pontMilieuDroit":[1/2,(-0.5*SCALE,5*SCALE),(0.5*SCALE,5*SCALE),(-1.5*SCALE,5*SCALE),(1.5*SCALE,5*SCALE),(-2.5*SCALE,5*SCALE),(2.5*SCALE,5*SCALE)],
-              "pontArrDroit":[1/2,(7.5*SCALE,5*SCALE),(6.5*SCALE,5*SCALE),(8.5*SCALE,5*SCALE),(5.5*SCALE,5*SCALE),(9.5*SCALE,5*SCALE),(4.5*SCALE,5*SCALE)],
-              "pontAvantGauche":[1/2,(-7.5*SCALE,-3*SCALE),(-6.5*SCALE,-3*SCALE),(-8.5*SCALE,-3*SCALE),(-5.5*SCALE,-3*SCALE),(-9.5*SCALE,-3*SCALE),(-4.5*SCALE,-3*SCALE)],
-              "pontMilieuGauche":[1/2,(-0.5*SCALE,-3*SCALE),(0.5*SCALE,-3*SCALE),(-1.5*SCALE,-3*SCALE),(1.5*SCALE,-3*SCALE),(-2.5*SCALE,-3*SCALE),(2.5*SCALE,-3*SCALE)],
-              "pontArrGauche":[1/2,(7.5*SCALE,-3*SCALE),(6.5*SCALE,-3*SCALE),(8.5*SCALE,-3*SCALE),(5.5*SCALE,-3*SCALE),(9.5*SCALE,-3*SCALE),(4.5*SCALE,-3*SCALE)],
-              "moteur":[1/2,(-9*SCALE,3*SCALE),(-7*SCALE,3*SCALE),(-5*SCALE,3*SCALE),(-7*SCALE,1*SCALE),(-5*SCALE,1*SCALE),(-6*SCALE,2*SCALE)],
-              "cabine":[1/2,(-7.5*SCALE,-1*SCALE),(-6.5*SCALE,-1*SCALE),(-8.5*SCALE,-1*SCALE),(-5.5*SCALE,-1*SCALE),(-9.5*SCALE,-1*SCALE),(-4.5*SCALE,-1*SCALE)], 
-              "buffet":[1/2,(-3*SCALE,0.5*SCALE),(-3*SCALE,1.5*SCALE),(-3*SCALE,-0.5*SCALE),(-3*SCALE,2.5*SCALE),(-3*SCALE,-1.5*SCALE),(-3*SCALE,3.5*SCALE)],
-              "tapis":[1/2,(-1*SCALE,0.5*SCALE),(-1*SCALE,1.5*SCALE),(-1*SCALE,-0.5*SCALE),(-1*SCALE,2.5*SCALE),(-1*SCALE,-1.5*SCALE),(-1*SCALE,3.5*SCALE)],
-              "tables":[1/2,(1*SCALE,1*SCALE),(3*SCALE,1*SCALE),(1*SCALE,3*SCALE),(3*SCALE,3*SCALE),(1*SCALE,-1*SCALE),(3*SCALE,-1*SCALE)],
-              "pontAvant":[1/2,(-11*SCALE,1*SCALE),(-11*SCALE,3*SCALE),(-11*SCALE,-1*SCALE),(-13*SCALE,2*SCALE),(-13*SCALE,0),(-15*SCALE,1*SCALE)],
-              "pontArriere":[1/2,(11*SCALE,1*SCALE),(11*SCALE,3*SCALE),(11*SCALE,-1*SCALE),(13*SCALE,2*SCALE),(13*SCALE,0),(15*SCALE,1*SCALE)],
-              "chambresGauche":[1/2,(7.5*SCALE,3*SCALE),(6.5*SCALE,3*SCALE),(8.5*SCALE,3*SCALE),(5.5*SCALE,3*SCALE),(9.5*SCALE,3*SCALE),(4.5*SCALE,3*SCALE)],
-              "chambresDroite":[1/2,(7.5*SCALE,-1*SCALE),(6.5*SCALE,-1*SCALE),(8.5*SCALE,-1*SCALE),(5.5*SCALE,-1*SCALE),(9.5*SCALE,-1*SCALE),(4.5*SCALE,-1*SCALE)],
-              "salleSecrete":[1/2,(7.5*SCALE,1*SCALE),(6.5*SCALE,1*SCALE),(8.5*SCALE,1*SCALE),(5.5*SCALE,1*SCALE),(9.5*SCALE,1*SCALE),(4.5*SCALE,1*SCALE)]}
-    
-    def __init__(self,cv, color):
-        self.t = RawTurtle(cv)
-        self.t.hideturtle()
-        self.t.color(color,color)
-        self.place = "tables"
+    def __init__(self, map, color):
+        self.place = ["",0]
         self.tresors = 0
         self.move = 3
-        # self
+        self.map = map
+        self.color = color
+        self.set_place("tables")
         
-    def pion(self, n):
-        self.t.speed(0)
-        self.t.penup()
-        self.t.goto(Player.places[self.place][n])
-        self.t.seth(90)
-        self.t.fd(0.25*SCALE)
-        self.t.right(90)
-        self.t.pendown()
-        self.t.begin_fill()
-        self.t.circle(-0.25*SCALE)
-        self.t.end_fill()
-    
     def set_place(self,place):
-        self.place = place
+        self.place[0] = place
+        self.map.add_people(self)
+
+    def set_which_pawn(self,n):
+        self.place[1] = n
+
+    def get_position(self):
+        return self.place
     
     def get_tresors(self):
         return self.tresors
-    
-    def turn(self):
-        self
-        return
-        
-class Map():
-    def __init__(self,cv):
-        self.t = RawTurtle(cv)
-        self.t.hideturtle()
-        self.state = {"pontAvantDroit":[0,pontAvantDroit], "pontMilieuDroit":[0,pontMilieuDroit],
-                      "pontArrDroit":[0,pontArrDroit], "pontAvantGauche":[0,pontAvantGauche],
-                      "pontMilieuGauche":[0,pontMilieuGauche], "pontArrGauche":[0,pontArrGauche],
-                      "moteur":[0,moteur], "cabine":[0,cabine], "buffet":[0,buffet], 
-                      "tapis":[0,tapis], "tables":[0,tables],"pontAvant":[0,pontAvant],
-                      "pontArriere":[0,pontArriere], "chambresGauche":[0,chambresGauche],
-                      "chambresDroite":[0,chambresDroite], "salleSecrete":[0,salleSecrete]}
-        
-        self.initMap()
-        
-    def initMap(self):
-        pontAvantDroit(self.t)
-        pontMilieuDroit(self.t)
-        pontArrDroit(self.t)
-        pontAvantGauche(self.t)
-        pontMilieuGauche(self.t)
-        pontArrGauche(self.t)
-        moteur(self.t)
-        cabine(self.t)
-        buffet(self.t)
-        tapis(self.t)
-        tables(self.t)
-        chambresDroite(self.t)
-        chambresGauche(self.t)
-        salleSecrete(self.t)
-        pontAvant(self.t)
-        pontArriere(self.t)
-        bateauDroit(self.t)
-        bateauGauche(self.t)
-        
-    def sinking(self, place):
-        if (self.state[place][0] == 2):
-            print("Le terrain est déjà innondé.")
-        else:
-            self.state[place][0] += 1 
-            if (self.state[place][0] == 1):
-                print("Le terrain est en train de sombrer.")
-                self.state[place][1](self.t, sinking=True)
-            elif(self.state[place[0] == 2]):
-                print("Le terrain est innondé.")
-                self.state[place][1](self.t, sunk=True)
-        return self.state[place][0]
-    
-    def drying(self, place):
-        if (self.state[place][0] == 0):
+
+    def drying(self, place, map):
+        if (map.state[place] == 0):
             print("Le terrain est déjà sec.")
-        elif (self.state[place][0] == 2):
+        elif (self.state[place] == 2):
             print("Le terrain est innondé et ne peut pas être assècher.")
         else:
             print("Le terraine est asséché.")
-            self.state[place][0] -= 1
-            self.state[place][1](self.t)
-        return self.state[place][0]
+            self.state[place] -= 1
+            data.places[self.place]['func'](map.map.t)
+        return self.state[place]
+
+    def leave(self,map):
+        if(self.place == 'bateauGauche' or self.place == 'bateauDroit'):
+            map.set_state(self.place)
+
+    def turn(self, e):
+        self
+        return
+    
