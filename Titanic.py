@@ -5,14 +5,12 @@ Spyder Editor
 This is a temporary script file.
 """
 
-import numpy as np
-import turtle as ttl
-import Carte
-import GameObject as GO
+import Map as M
+import Player as P
 import matplotlib.pyplot as plt
 from tkinter import *
 from tkinter import ttk
-import time
+import GUI
 
 def main():
     root = Tk()
@@ -31,14 +29,14 @@ def main():
     plateau_frame.grid(row=1,column=0)
     canvas = Canvas(plateau_frame, height=500, width=1000)
     canvas.grid(row=0,column=0)
-    plateau = GO.Map(canvas)
-    player1 = GO.Player(plateau,'red')
+    plateau = M.Map(canvas)
+    playerList = P.PlayerList(P.Player(plateau,'red'))
+    playerList.add_player(P.Player(plateau,'blue'))
+    print(P.PlayerList.length())
 
-    button_frame = Frame(root, height=100,width=1000)
+    button_frame = GUI.ActualizedFrame(root,playerList=playerList, height=100,width=1000)
     button_frame.grid(row=2,column=0)
-    button = ttk.Button(button_frame,text='move')
-    button.bind('<1>',lambda e:player1.travel('pontMilieuGauche'))
-    button.pack()
+    button_frame.show_buttons()
     
     root.mainloop()
 
